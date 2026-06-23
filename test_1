@@ -1,0 +1,511 @@
+ModuleList(
+  (0): ControlNetModel(
+    (conv_in): Conv2d(4, 320, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (time_proj): Timesteps()
+    (time_embedding): TimestepEmbedding(
+      (linear_1): Linear(in_features=320, out_features=1280, bias=True)
+      (act): SiLU()
+      (linear_2): Linear(in_features=1280, out_features=1280, bias=True)
+    )
+    (add_time_proj): Timesteps()
+    (add_embedding): TimestepEmbedding(
+      (linear_1): Linear(in_features=2816, out_features=1280, bias=True)
+      (act): SiLU()
+      (linear_2): Linear(in_features=1280, out_features=1280, bias=True)
+    )
+    (controlnet_cond_embedding): ControlNetConditioningEmbedding(
+      (conv_in): Conv2d(3, 16, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (blocks): ModuleList(
+        (0): Conv2d(16, 16, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (1): Conv2d(16, 32, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1))
+        (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (3): Conv2d(32, 96, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1))
+        (4): Conv2d(96, 96, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (5): Conv2d(96, 256, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1))
+      )
+      (conv_out): Conv2d(256, 320, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    )
+    (down_blocks): ModuleList(
+      (0): DownBlock2D(
+        (resnets): ModuleList(
+          (0-1): 2 x ResnetBlock2D(
+            (norm1): GroupNorm(32, 320, eps=1e-05, affine=True)
+            (conv1): Conv2d(320, 320, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+            (time_emb_proj): Linear(in_features=1280, out_features=320, bias=True)
+            (norm2): GroupNorm(32, 320, eps=1e-05, affine=True)
+            (dropout): Dropout(p=0.0, inplace=False)
+            (conv2): Conv2d(320, 320, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+            (nonlinearity): SiLU()
+          )
+        )
+        (downsamplers): ModuleList(
+          (0): Downsample2D(
+            (conv): Conv2d(320, 320, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1))
+          )
+        )
+      )
+      (1): CrossAttnDownBlock2D(
+        (attentions): ModuleList(
+          (0-1): 2 x Transformer2DModel(
+            (norm): GroupNorm(32, 640, eps=1e-06, affine=True)
+            (proj_in): Linear(in_features=640, out_features=640, bias=True)
+            (transformer_blocks): ModuleList(
+              (0-1): 2 x BasicTransformerBlock(
+                (norm1): LayerNorm((640,), eps=1e-05, elementwise_affine=True)
+                (attn1): Attention(
+                  (to_q): Linear(in_features=640, out_features=640, bias=False)
+                  (to_k): Linear(in_features=640, out_features=640, bias=False)
+                  (to_v): Linear(in_features=640, out_features=640, bias=False)
+                  (to_out): ModuleList(
+                    (0): Linear(in_features=640, out_features=640, bias=True)
+                    (1): Dropout(p=0.0, inplace=False)
+                  )
+                )
+                (norm2): LayerNorm((640,), eps=1e-05, elementwise_affine=True)
+                (attn2): Attention(
+                  (to_q): Linear(in_features=640, out_features=640, bias=False)
+                  (to_k): Linear(in_features=2048, out_features=640, bias=False)
+                  (to_v): Linear(in_features=2048, out_features=640, bias=False)
+                  (to_out): ModuleList(
+                    (0): Linear(in_features=640, out_features=640, bias=True)
+                    (1): Dropout(p=0.0, inplace=False)
+                  )
+                )
+                (norm3): LayerNorm((640,), eps=1e-05, elementwise_affine=True)
+                (ff): FeedForward(
+                  (net): ModuleList(
+                    (0): GEGLU(
+                      (proj): Linear(in_features=640, out_features=5120, bias=True)
+                    )
+                    (1): Dropout(p=0.0, inplace=False)
+                    (2): Linear(in_features=2560, out_features=640, bias=True)
+                  )
+                )
+              )
+            )
+            (proj_out): Linear(in_features=640, out_features=640, bias=True)
+          )
+        )
+        (resnets): ModuleList(
+          (0): ResnetBlock2D(
+            (norm1): GroupNorm(32, 320, eps=1e-05, affine=True)
+            (conv1): Conv2d(320, 640, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+            (time_emb_proj): Linear(in_features=1280, out_features=640, bias=True)
+            (norm2): GroupNorm(32, 640, eps=1e-05, affine=True)
+            (dropout): Dropout(p=0.0, inplace=False)
+            (conv2): Conv2d(640, 640, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+            (nonlinearity): SiLU()
+            (conv_shortcut): Conv2d(320, 640, kernel_size=(1, 1), stride=(1, 1))
+          )
+          (1): ResnetBlock2D(
+            (norm1): GroupNorm(32, 640, eps=1e-05, affine=True)
+            (conv1): Conv2d(640, 640, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+            (time_emb_proj): Linear(in_features=1280, out_features=640, bias=True)
+            (norm2): GroupNorm(32, 640, eps=1e-05, affine=True)
+            (dropout): Dropout(p=0.0, inplace=False)
+            (conv2): Conv2d(640, 640, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+            (nonlinearity): SiLU()
+          )
+        )
+        (downsamplers): ModuleList(
+          (0): Downsample2D(
+            (conv): Conv2d(640, 640, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1))
+          )
+        )
+      )
+      (2): CrossAttnDownBlock2D(
+        (attentions): ModuleList(
+          (0-1): 2 x Transformer2DModel(
+            (norm): GroupNorm(32, 1280, eps=1e-06, affine=True)
+            (proj_in): Linear(in_features=1280, out_features=1280, bias=True)
+            (transformer_blocks): ModuleList(
+              (0-9): 10 x BasicTransformerBlock(
+                (norm1): LayerNorm((1280,), eps=1e-05, elementwise_affine=True)
+                (attn1): Attention(
+                  (to_q): Linear(in_features=1280, out_features=1280, bias=False)
+                  (to_k): Linear(in_features=1280, out_features=1280, bias=False)
+                  (to_v): Linear(in_features=1280, out_features=1280, bias=False)
+                  (to_out): ModuleList(
+                    (0): Linear(in_features=1280, out_features=1280, bias=True)
+                    (1): Dropout(p=0.0, inplace=False)
+                  )
+                )
+                (norm2): LayerNorm((1280,), eps=1e-05, elementwise_affine=True)
+                (attn2): Attention(
+                  (to_q): Linear(in_features=1280, out_features=1280, bias=False)
+                  (to_k): Linear(in_features=2048, out_features=1280, bias=False)
+                  (to_v): Linear(in_features=2048, out_features=1280, bias=False)
+                  (to_out): ModuleList(
+                    (0): Linear(in_features=1280, out_features=1280, bias=True)
+                    (1): Dropout(p=0.0, inplace=False)
+                  )
+                )
+                (norm3): LayerNorm((1280,), eps=1e-05, elementwise_affine=True)
+                (ff): FeedForward(
+                  (net): ModuleList(
+                    (0): GEGLU(
+                      (proj): Linear(in_features=1280, out_features=10240, bias=True)
+                    )
+                    (1): Dropout(p=0.0, inplace=False)
+                    (2): Linear(in_features=5120, out_features=1280, bias=True)
+                  )
+                )
+              )
+            )
+            (proj_out): Linear(in_features=1280, out_features=1280, bias=True)
+          )
+        )
+        (resnets): ModuleList(
+          (0): ResnetBlock2D(
+            (norm1): GroupNorm(32, 640, eps=1e-05, affine=True)
+            (conv1): Conv2d(640, 1280, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+            (time_emb_proj): Linear(in_features=1280, out_features=1280, bias=True)
+            (norm2): GroupNorm(32, 1280, eps=1e-05, affine=True)
+            (dropout): Dropout(p=0.0, inplace=False)
+            (conv2): Conv2d(1280, 1280, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+            (nonlinearity): SiLU()
+            (conv_shortcut): Conv2d(640, 1280, kernel_size=(1, 1), stride=(1, 1))
+          )
+          (1): ResnetBlock2D(
+            (norm1): GroupNorm(32, 1280, eps=1e-05, affine=True)
+            (conv1): Conv2d(1280, 1280, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+            (time_emb_proj): Linear(in_features=1280, out_features=1280, bias=True)
+            (norm2): GroupNorm(32, 1280, eps=1e-05, affine=True)
+            (dropout): Dropout(p=0.0, inplace=False)
+            (conv2): Conv2d(1280, 1280, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+            (nonlinearity): SiLU()
+          )
+        )
+      )
+    )
+    (controlnet_down_blocks): ModuleList(
+      (0-3): 4 x Conv2d(320, 320, kernel_size=(1, 1), stride=(1, 1))
+      (4-6): 3 x Conv2d(640, 640, kernel_size=(1, 1), stride=(1, 1))
+      (7-8): 2 x Conv2d(1280, 1280, kernel_size=(1, 1), stride=(1, 1))
+    )
+    (controlnet_mid_block): Conv2d(1280, 1280, kernel_size=(1, 1), stride=(1, 1))
+    (mid_block): UNetMidBlock2DCrossAttn(
+      (attentions): ModuleList(
+        (0): Transformer2DModel(
+          (norm): GroupNorm(32, 1280, eps=1e-06, affine=True)
+          (proj_in): Linear(in_features=1280, out_features=1280, bias=True)
+          (transformer_blocks): ModuleList(
+            (0-9): 10 x BasicTransformerBlock(
+              (norm1): LayerNorm((1280,), eps=1e-05, elementwise_affine=True)
+              (attn1): Attention(
+                (to_q): Linear(in_features=1280, out_features=1280, bias=False)
+                (to_k): Linear(in_features=1280, out_features=1280, bias=False)
+                (to_v): Linear(in_features=1280, out_features=1280, bias=False)
+                (to_out): ModuleList(
+                  (0): Linear(in_features=1280, out_features=1280, bias=True)
+                  (1): Dropout(p=0.0, inplace=False)
+                )
+              )
+              (norm2): LayerNorm((1280,), eps=1e-05, elementwise_affine=True)
+              (attn2): Attention(
+                (to_q): Linear(in_features=1280, out_features=1280, bias=False)
+                (to_k): Linear(in_features=2048, out_features=1280, bias=False)
+                (to_v): Linear(in_features=2048, out_features=1280, bias=False)
+                (to_out): ModuleList(
+                  (0): Linear(in_features=1280, out_features=1280, bias=True)
+                  (1): Dropout(p=0.0, inplace=False)
+                )
+              )
+              (norm3): LayerNorm((1280,), eps=1e-05, elementwise_affine=True)
+              (ff): FeedForward(
+                (net): ModuleList(
+                  (0): GEGLU(
+                    (proj): Linear(in_features=1280, out_features=10240, bias=True)
+                  )
+                  (1): Dropout(p=0.0, inplace=False)
+                  (2): Linear(in_features=5120, out_features=1280, bias=True)
+                )
+              )
+            )
+          )
+          (proj_out): Linear(in_features=1280, out_features=1280, bias=True)
+        )
+      )
+      (resnets): ModuleList(
+        (0-1): 2 x ResnetBlock2D(
+          (norm1): GroupNorm(32, 1280, eps=1e-05, affine=True)
+          (conv1): Conv2d(1280, 1280, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (time_emb_proj): Linear(in_features=1280, out_features=1280, bias=True)
+          (norm2): GroupNorm(32, 1280, eps=1e-05, affine=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+          (conv2): Conv2d(1280, 1280, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (nonlinearity): SiLU()
+        )
+      )
+    )
+  )
+  (1): ControlNetUnionModel(
+    (conv_in): Conv2d(4, 320, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (time_proj): Timesteps()
+    (time_embedding): TimestepEmbedding(
+      (linear_1): Linear(in_features=320, out_features=1280, bias=True)
+      (act): SiLU()
+      (linear_2): Linear(in_features=1280, out_features=1280, bias=True)
+    )
+    (add_time_proj): Timesteps()
+    (add_embedding): TimestepEmbedding(
+      (linear_1): Linear(in_features=2816, out_features=1280, bias=True)
+      (act): SiLU()
+      (linear_2): Linear(in_features=1280, out_features=1280, bias=True)
+    )
+    (controlnet_cond_embedding): ControlNetConditioningEmbedding(
+      (conv_in): Conv2d(3, 16, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (blocks): ModuleList(
+        (0): Conv2d(16, 16, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (1): Conv2d(16, 32, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1))
+        (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (3): Conv2d(32, 96, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1))
+        (4): Conv2d(96, 96, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (5): Conv2d(96, 256, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1))
+      )
+      (conv_out): Conv2d(256, 320, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    )
+    (transformer_layes): ModuleList(
+      (0): ResidualAttentionBlock(
+        (attn): MultiheadAttention(
+          (out_proj): NonDynamicallyQuantizableLinear(in_features=320, out_features=320, bias=True)
+        )
+        (ln_1): LayerNorm((320,), eps=1e-05, elementwise_affine=True)
+        (mlp): ResidualAttentionMlp(
+          (c_fc): Linear(in_features=320, out_features=1280, bias=True)
+          (gelu): QuickGELU()
+          (c_proj): Linear(in_features=1280, out_features=320, bias=True)
+        )
+        (ln_2): LayerNorm((320,), eps=1e-05, elementwise_affine=True)
+      )
+    )
+    (spatial_ch_projs): Linear(in_features=320, out_features=320, bias=True)
+    (control_type_proj): Timesteps()
+    (control_add_embedding): TimestepEmbedding(
+      (linear_1): Linear(in_features=1536, out_features=1280, bias=True)
+      (act): SiLU()
+      (linear_2): Linear(in_features=1280, out_features=1280, bias=True)
+    )
+    (down_blocks): ModuleList(
+      (0): DownBlock2D(
+        (resnets): ModuleList(
+          (0-1): 2 x ResnetBlock2D(
+            (norm1): GroupNorm(32, 320, eps=1e-05, affine=True)
+            (conv1): Conv2d(320, 320, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+            (time_emb_proj): Linear(in_features=1280, out_features=320, bias=True)
+            (norm2): GroupNorm(32, 320, eps=1e-05, affine=True)
+            (dropout): Dropout(p=0.0, inplace=False)
+            (conv2): Conv2d(320, 320, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+            (nonlinearity): SiLU()
+          )
+        )
+        (downsamplers): ModuleList(
+          (0): Downsample2D(
+            (conv): Conv2d(320, 320, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1))
+          )
+        )
+      )
+      (1): CrossAttnDownBlock2D(
+        (attentions): ModuleList(
+          (0-1): 2 x Transformer2DModel(
+            (norm): GroupNorm(32, 640, eps=1e-06, affine=True)
+            (proj_in): Linear(in_features=640, out_features=640, bias=True)
+            (transformer_blocks): ModuleList(
+              (0-1): 2 x BasicTransformerBlock(
+                (norm1): LayerNorm((640,), eps=1e-05, elementwise_affine=True)
+                (attn1): Attention(
+                  (to_q): Linear(in_features=640, out_features=640, bias=False)
+                  (to_k): Linear(in_features=640, out_features=640, bias=False)
+                  (to_v): Linear(in_features=640, out_features=640, bias=False)
+                  (to_out): ModuleList(
+                    (0): Linear(in_features=640, out_features=640, bias=True)
+                    (1): Dropout(p=0.0, inplace=False)
+                  )
+                )
+                (norm2): LayerNorm((640,), eps=1e-05, elementwise_affine=True)
+                (attn2): Attention(
+                  (to_q): Linear(in_features=640, out_features=640, bias=False)
+                  (to_k): Linear(in_features=2048, out_features=640, bias=False)
+                  (to_v): Linear(in_features=2048, out_features=640, bias=False)
+                  (to_out): ModuleList(
+                    (0): Linear(in_features=640, out_features=640, bias=True)
+                    (1): Dropout(p=0.0, inplace=False)
+                  )
+                )
+                (norm3): LayerNorm((640,), eps=1e-05, elementwise_affine=True)
+                (ff): FeedForward(
+                  (net): ModuleList(
+                    (0): GEGLU(
+                      (proj): Linear(in_features=640, out_features=5120, bias=True)
+                    )
+                    (1): Dropout(p=0.0, inplace=False)
+                    (2): Linear(in_features=2560, out_features=640, bias=True)
+                  )
+                )
+              )
+            )
+            (proj_out): Linear(in_features=640, out_features=640, bias=True)
+          )
+        )
+        (resnets): ModuleList(
+          (0): ResnetBlock2D(
+            (norm1): GroupNorm(32, 320, eps=1e-05, affine=True)
+            (conv1): Conv2d(320, 640, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+            (time_emb_proj): Linear(in_features=1280, out_features=640, bias=True)
+            (norm2): GroupNorm(32, 640, eps=1e-05, affine=True)
+            (dropout): Dropout(p=0.0, inplace=False)
+            (conv2): Conv2d(640, 640, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+            (nonlinearity): SiLU()
+            (conv_shortcut): Conv2d(320, 640, kernel_size=(1, 1), stride=(1, 1))
+          )
+          (1): ResnetBlock2D(
+            (norm1): GroupNorm(32, 640, eps=1e-05, affine=True)
+            (conv1): Conv2d(640, 640, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+            (time_emb_proj): Linear(in_features=1280, out_features=640, bias=True)
+            (norm2): GroupNorm(32, 640, eps=1e-05, affine=True)
+            (dropout): Dropout(p=0.0, inplace=False)
+            (conv2): Conv2d(640, 640, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+            (nonlinearity): SiLU()
+          )
+        )
+        (downsamplers): ModuleList(
+          (0): Downsample2D(
+            (conv): Conv2d(640, 640, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1))
+          )
+        )
+      )
+      (2): CrossAttnDownBlock2D(
+        (attentions): ModuleList(
+          (0-1): 2 x Transformer2DModel(
+            (norm): GroupNorm(32, 1280, eps=1e-06, affine=True)
+            (proj_in): Linear(in_features=1280, out_features=1280, bias=True)
+            (transformer_blocks): ModuleList(
+              (0-9): 10 x BasicTransformerBlock(
+                (norm1): LayerNorm((1280,), eps=1e-05, elementwise_affine=True)
+                (attn1): Attention(
+                  (to_q): Linear(in_features=1280, out_features=1280, bias=False)
+                  (to_k): Linear(in_features=1280, out_features=1280, bias=False)
+                  (to_v): Linear(in_features=1280, out_features=1280, bias=False)
+                  (to_out): ModuleList(
+                    (0): Linear(in_features=1280, out_features=1280, bias=True)
+                    (1): Dropout(p=0.0, inplace=False)
+                  )
+                )
+                (norm2): LayerNorm((1280,), eps=1e-05, elementwise_affine=True)
+                (attn2): Attention(
+                  (to_q): Linear(in_features=1280, out_features=1280, bias=False)
+                  (to_k): Linear(in_features=2048, out_features=1280, bias=False)
+                  (to_v): Linear(in_features=2048, out_features=1280, bias=False)
+                  (to_out): ModuleList(
+                    (0): Linear(in_features=1280, out_features=1280, bias=True)
+                    (1): Dropout(p=0.0, inplace=False)
+                  )
+                )
+                (norm3): LayerNorm((1280,), eps=1e-05, elementwise_affine=True)
+                (ff): FeedForward(
+                  (net): ModuleList(
+                    (0): GEGLU(
+                      (proj): Linear(in_features=1280, out_features=10240, bias=True)
+                    )
+                    (1): Dropout(p=0.0, inplace=False)
+                    (2): Linear(in_features=5120, out_features=1280, bias=True)
+                  )
+                )
+              )
+            )
+            (proj_out): Linear(in_features=1280, out_features=1280, bias=True)
+          )
+        )
+        (resnets): ModuleList(
+          (0): ResnetBlock2D(
+            (norm1): GroupNorm(32, 640, eps=1e-05, affine=True)
+            (conv1): Conv2d(640, 1280, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+            (time_emb_proj): Linear(in_features=1280, out_features=1280, bias=True)
+            (norm2): GroupNorm(32, 1280, eps=1e-05, affine=True)
+            (dropout): Dropout(p=0.0, inplace=False)
+            (conv2): Conv2d(1280, 1280, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+            (nonlinearity): SiLU()
+            (conv_shortcut): Conv2d(640, 1280, kernel_size=(1, 1), stride=(1, 1))
+          )
+          (1): ResnetBlock2D(
+            (norm1): GroupNorm(32, 1280, eps=1e-05, affine=True)
+            (conv1): Conv2d(1280, 1280, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+            (time_emb_proj): Linear(in_features=1280, out_features=1280, bias=True)
+            (norm2): GroupNorm(32, 1280, eps=1e-05, affine=True)
+            (dropout): Dropout(p=0.0, inplace=False)
+            (conv2): Conv2d(1280, 1280, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+            (nonlinearity): SiLU()
+          )
+        )
+      )
+    )
+    (controlnet_down_blocks): ModuleList(
+      (0-3): 4 x Conv2d(320, 320, kernel_size=(1, 1), stride=(1, 1))
+      (4-6): 3 x Conv2d(640, 640, kernel_size=(1, 1), stride=(1, 1))
+      (7-8): 2 x Conv2d(1280, 1280, kernel_size=(1, 1), stride=(1, 1))
+    )
+    (controlnet_mid_block): Conv2d(1280, 1280, kernel_size=(1, 1), stride=(1, 1))
+    (mid_block): UNetMidBlock2DCrossAttn(
+      (attentions): ModuleList(
+        (0): Transformer2DModel(
+          (norm): GroupNorm(32, 1280, eps=1e-06, affine=True)
+          (proj_in): Linear(in_features=1280, out_features=1280, bias=True)
+          (transformer_blocks): ModuleList(
+            (0-9): 10 x BasicTransformerBlock(
+              (norm1): LayerNorm((1280,), eps=1e-05, elementwise_affine=True)
+              (attn1): Attention(
+                (to_q): Linear(in_features=1280, out_features=1280, bias=False)
+                (to_k): Linear(in_features=1280, out_features=1280, bias=False)
+                (to_v): Linear(in_features=1280, out_features=1280, bias=False)
+                (to_out): ModuleList(
+                  (0): Linear(in_features=1280, out_features=1280, bias=True)
+                  (1): Dropout(p=0.0, inplace=False)
+                )
+              )
+              (norm2): LayerNorm((1280,), eps=1e-05, elementwise_affine=True)
+              (attn2): Attention(
+                (to_q): Linear(in_features=1280, out_features=1280, bias=False)
+                (to_k): Linear(in_features=2048, out_features=1280, bias=False)
+                (to_v): Linear(in_features=2048, out_features=1280, bias=False)
+                (to_out): ModuleList(
+                  (0): Linear(in_features=1280, out_features=1280, bias=True)
+                  (1): Dropout(p=0.0, inplace=False)
+                )
+              )
+              (norm3): LayerNorm((1280,), eps=1e-05, elementwise_affine=True)
+              (ff): FeedForward(
+                (net): ModuleList(
+                  (0): GEGLU(
+                    (proj): Linear(in_features=1280, out_features=10240, bias=True)
+                  )
+                  (1): Dropout(p=0.0, inplace=False)
+                  (2): Linear(in_features=5120, out_features=1280, bias=True)
+                )
+              )
+            )
+          )
+          (proj_out): Linear(in_features=1280, out_features=1280, bias=True)
+        )
+      )
+      (resnets): ModuleList(
+        (0-1): 2 x ResnetBlock2D(
+          (norm1): GroupNorm(32, 1280, eps=1e-05, affine=True)
+          (conv1): Conv2d(1280, 1280, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (time_emb_proj): Linear(in_features=1280, out_features=1280, bias=True)
+          (norm2): GroupNorm(32, 1280, eps=1e-05, affine=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+          (conv2): Conv2d(1280, 1280, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (nonlinearity): SiLU()
+        )
+      )
+    )
+  )
+)
+
+Net 0
+<class 'diffusers.models.controlnets.controlnet.ControlNetModel'>
+FrozenDict({'in_channels': 4, 'conditioning_channels': 3, 'flip_sin_to_cos': True, 'freq_shift': 0, 'down_block_types': ['DownBlock2D', 'CrossAttnDownBlock2D', 'CrossAttnDownBlock2D'], 'mid_block_type': 'UNetMidBlock2DCrossAttn', 'only_cross_attention': False, 'block_out_channels': [320, 640, 1280], 'layers_per_block': 2, 'downsample_padding': 1, 'mid_block_scale_factor': 1, 'act_fn': 'silu', 'norm_num_groups': 32, 'norm_eps': 1e-05, 'cross_attention_dim': 2048, 'transformer_layers_per_block': [1, 2, 10], 'encoder_hid_dim': None, 'encoder_hid_dim_type': None, 'attention_head_dim': [5, 10, 20], 'num_attention_heads': None, 'use_linear_projection': True, 'class_embed_type': None, 'addition_embed_type': 'text_time', 'addition_time_embed_dim': 256, 'num_class_embeds': None, 'upcast_attention': None, 'resnet_time_scale_shift': 'default', 'projection_class_embeddings_input_dim': 2816, 'controlnet_conditioning_channel_order': 'rgb', 'conditioning_embedding_out_channels': [16, 32, 96, 256], 'global_pool_conditions': False, 'addition_embed_type_num_heads': 64, '_use_default_values': ['mid_block_type'], '_class_name': 'ControlNetModel', '_diffusers_version': '0.23.0', '_name_or_path': '/kaggle/input/datasets/karan912313/controlnet-mistoline'})
+
+Net 1
+<class 'diffusers.models.controlnets.controlnet_union.ControlNetUnionModel'>
+FrozenDict({'in_channels': 4, 'conditioning_channels': 3, 'flip_sin_to_cos': True, 'freq_shift': 0, 'down_block_types': ['DownBlock2D', 'CrossAttnDownBlock2D', 'CrossAttnDownBlock2D'], 'only_cross_attention': False, 'block_out_channels': [320, 640, 1280], 'layers_per_block': 2, 'downsample_padding': 1, 'mid_block_scale_factor': 1, 'act_fn': 'silu', 'norm_num_groups': 32, 'norm_eps': 1e-05, 'cross_attention_dim': 2048, 'transformer_layers_per_block': [1, 2, 10], 'encoder_hid_dim': None, 'encoder_hid_dim_type': None, 'attention_head_dim': [5, 10, 20], 'num_attention_heads': None, 'use_linear_projection': True, 'class_embed_type': None, 'addition_embed_type': 'text_time', 'addition_time_embed_dim': 256, 'num_class_embeds': None, 'upcast_attention': None, 'resnet_time_scale_shift': 'default', 'projection_class_embeddings_input_dim': 2816, 'controlnet_conditioning_channel_order': 'rgb', 'conditioning_embedding_out_channels': [16, 32, 96, 256], 'global_pool_conditions': False, 'addition_embed_type_num_heads': 64, 'num_control_type': 6, 'num_trans_channel': 320, 'num_trans_head': 8, 'num_trans_layer': 1, 'num_proj_channel': 320, '_use_default_values': ['num_proj_channel', 'num_trans_head', 'num_trans_channel', 'num_trans_layer', 'num_control_type'], '_class_name': 'ControlNetUnionModel', '_diffusers_version': '0.20.0.dev0', '_name_or_path': '/kaggle/input/datasets/kapawar/controlnet-union-sdxl-1-0'})
